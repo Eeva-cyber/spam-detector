@@ -1,4 +1,5 @@
-import { analyzeMessage } from '@/lib/scoring';
+import { extractFeatures } from '@/detector/feature_extractor';
+import { runDetection } from '@/detector/scorer';
 
 export async function POST(request: Request) {
   const body = (await request.json()) as { message?: unknown };
@@ -7,6 +8,7 @@ export async function POST(request: Request) {
     return Response.json({ error: 'Message is required' }, { status: 400 });
   }
 
-  const result = analyzeMessage(body.message);
+  const features = extractFeatures(body.message);
+  const result = runDetection(features);
   return Response.json(result);
 }

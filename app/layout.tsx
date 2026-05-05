@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Spam Detector",
-  description: "Rule-based spam message detection",
+  title: "Phishing Detector",
+  description: "Multi-layer phishing detection — headers, links, sender, and content analysis",
 };
 
 export default function RootLayout({
