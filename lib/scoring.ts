@@ -6,7 +6,14 @@ import {
   detectPromotionalBait,
   detectUrgencyLanguage,
 } from './spamRules';
-import type { Classification, RuleMatch, Signal, SpamResult, ThreatType } from './types';
+import type {
+  Classification,
+  MessageMetadata,
+  RuleMatch,
+  Signal,
+  SpamResult,
+  ThreatType,
+} from './types';
 
 function classify(score: number): Classification {
   if (score > 70) return 'Spam';
@@ -101,6 +108,32 @@ function generateReasoning(signals: Signal[], classification: Classification): s
   return points.slice(0, 3);
 }
 
+function shannonEntropy(text: string): number {
+  if (text.length === 0) return 0;
+  const freq: Record<string, number> = {};
+  for (const ch of text) {
+    freq[ch] = (freq[ch] ?? 0) + 1;
+  }
+  const len = text.length;
+  return Object.values(freq).reduce((H, count) => {
+    const p = count / len;
+    return H - p * Math.log2(p);
+  }, 0);
+}
+
+function computeMetadata(message: string): MessageMetadata {
+  const charCount = message.length;
+  const words = message.trim().split(/\s+/).filter(Boolean);
+  const wordCount = words.length;
+  const linkMatches = message.match(/https?:\/\/\S+|www\.\S+|bit\.ly\/\S+/gi) ?? [];
+  const linkCount = linkMatches.length;
+  const linkDensity =
+    wordCount > 0 ? `${((linkCount / wordCount) * 100).toFixed(1)}%` : '0.0%';
+  const entropy = `${shannonEntropy(message).toFixed(2)} bits`;
+
+  return { charCount, wordCount, linkCount, linkDensity, entropy };
+}
+
 export function analyzeMessage(message: string): SpamResult {
   const ruleMatches: RuleMatch[] = [
     detectUrgencyLanguage(message),
@@ -121,6 +154,7 @@ export function analyzeMessage(message: string): SpamResult {
   const summary = generateSummary(classification, threatType, allSignals);
   const reasoning = generateReasoning(allSignals, classification);
   const highlightedWords = [...new Set(ruleMatches.flatMap((r) => r.matchedWords))];
+  const metadata = computeMetadata(message);
 
   return {
     classification,
@@ -131,5 +165,6 @@ export function analyzeMessage(message: string): SpamResult {
     reasoning,
     signals: allSignals,
     highlightedWords,
+    metadata,
   };
 }

@@ -3,8 +3,17 @@ export type ThreatType = 'Phishing Attempt' | 'Urgency-Based Scam' | 'Promotiona
 
 export interface Signal {
   name: string;
+  ruleId: string;
   score: number;
   explanation: string;
+}
+
+export interface MessageMetadata {
+  charCount: number;
+  wordCount: number;
+  linkCount: number;
+  linkDensity: string;
+  entropy: string;
 }
 
 export interface SpamResult {
@@ -16,6 +25,7 @@ export interface SpamResult {
   reasoning: string[];
   signals: Signal[];
   highlightedWords: string[];
+  metadata: MessageMetadata;
 }
 
 export interface RuleMatch {
