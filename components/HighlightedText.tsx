@@ -30,10 +30,7 @@ export default function HighlightedText({ text, highlightWords }: Props) {
     <p className="text-sm leading-relaxed text-gray-700">
       {parts.map((part, i) =>
         part.highlight ? (
-          <mark
-            key={i}
-            className="rounded bg-yellow-200 px-0.5 text-yellow-900 not-italic"
-          >
+          <mark key={i} className="rounded bg-yellow-100 px-0.5 text-yellow-900 not-italic">
             {part.text}
           </mark>
         ) : (

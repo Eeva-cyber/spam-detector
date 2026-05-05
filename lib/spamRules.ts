@@ -18,6 +18,7 @@ export function detectUrgencyLanguage(text: string): RuleMatch {
     signals: [
       {
         name: 'Urgency Language',
+        ruleId: 'RULE_URG_001',
         score: matched.length * 25,
         explanation:
           'Creates artificial time pressure to prevent recipients from verifying authenticity before acting.',
@@ -37,6 +38,7 @@ export function detectPromotionalBait(text: string): RuleMatch {
     signals: [
       {
         name: 'Promotional Bait',
+        ruleId: 'RULE_PRO_002',
         score: matched.length * 20,
         explanation:
           'Unrealistic reward offers are a classic social engineering lure used to attract clicks and harvest personal data.',
@@ -56,6 +58,7 @@ export function detectCallToAction(text: string): RuleMatch {
     signals: [
       {
         name: 'Call-to-Action Phrase',
+        ruleId: 'RULE_CTA_003',
         score: 20,
         explanation:
           'Generic action phrases guide targets to external destinations without revealing where they lead — a standard phishing technique.',
@@ -75,6 +78,7 @@ export function detectLinks(text: string): RuleMatch {
     signals: [
       {
         name: 'External Link',
+        ruleId: 'RULE_LNK_004',
         score: 30,
         explanation:
           'URLs in unsolicited messages frequently redirect to credential-harvesting pages or malware-delivery sites.',
@@ -93,6 +97,7 @@ export function detectExcessivePunctuation(text: string): RuleMatch {
     signals: [
       {
         name: 'Excessive Punctuation',
+        ruleId: 'RULE_PNC_005',
         score: 15,
         explanation:
           'Repeated exclamation or question marks amplify emotional urgency to trigger impulsive, uncritical responses.',
@@ -123,6 +128,7 @@ export function detectAggressiveCaps(text: string): RuleMatch {
     signals: [
       {
         name: 'Aggressive Capitalization',
+        ruleId: 'RULE_CAP_006',
         score: Math.min(MAX_CAPS_SCORE, capsWords.length * 10),
         explanation:
           'ALL CAPS text mimics aggressive spam formatting to demand attention and convey false authority or urgency.',
